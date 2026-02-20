@@ -77,7 +77,7 @@ export function ParticipantView({ participant, isLocal }: ParticipantViewProps) 
             {/* Overlay Info */}
             <div className="absolute bottom-4 left-4 flex flex-col gap-1 z-10">
                 <span className="bg-black/60 backdrop-blur-md text-white text-xs px-3 py-1.5 rounded-full border border-white/10 font-medium">
-                    {participant.identity} {isLocal ? "(You)" : ""}
+                    {participant.identity.split('-')[0]} {isLocal ? "(You)" : ""}
                 </span>
             </div>
 
