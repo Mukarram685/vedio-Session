@@ -19,8 +19,10 @@ export function useLiveKit(sessionId: string | null, identity?: string) {
     const connect = useCallback(async () => {
         if (!sessionId) return;
         try {
-            const userId = identity || `user-${Math.random().toString(36).substring(7)}`;
-            const res = await fetch(`/api/livekit/token?room=${sessionId}&identity=${userId}`);
+            // Identities must be unique in LiveKit. If two "Patient" join, one kicks the other.
+            // We append a random suffix to the role to ensure uniqueness.
+            const uniqueId = `${identity || "user"}-${Math.random().toString(36).substring(7)}`;
+            const res = await fetch(`/api/livekit/token?room=${sessionId}&identity=${uniqueId}`);
             const { token } = await res.json();
 
             const newRoom = new Room({
@@ -46,6 +48,10 @@ export function useLiveKit(sessionId: string | null, identity?: string) {
                     setParticipants(newRoom.remoteParticipants.size + 1);
                 })
                 .on(RoomEvent.TrackSubscribed, () => {
+                    // Force update participants list to ensure the UI reacts to new tracks
+                    setRemoteParticipants(Array.from(newRoom.remoteParticipants.values()));
+                })
+                .on(RoomEvent.TrackUnsubscribed, () => {
                     setRemoteParticipants(Array.from(newRoom.remoteParticipants.values()));
                 })
                 .on(RoomEvent.DataReceived, (payload) => {
