@@ -6,10 +6,40 @@
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: #F5F5F5;
+  --color-foreground: #514B50;
+
+  --color-primary-purple: #A11692;
+  --color-accent-purple: #A31694;
+  --color-success: #28a745;
+  --color-error: #dc3545;
+  --color-text-grey: #514B50;
+
+  --font-sans: "Inter", "Roboto", ui-sans-serif, system-ui;
+
+  --radius-pill: 9999px;
+  --radius-card: 20px;
+
+  --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+:root {
+  --background: #F5F5F5;
+  --foreground: #514B50;
+  --primary: #A11692;
+  --accent: #A31694;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* Custom focus state as per requirements */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 @media (prefers-color-scheme: dark) {

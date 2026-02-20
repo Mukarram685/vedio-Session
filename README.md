@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Session Management & Live Video Integration
 
-## Getting Started
+A production-ready healthcare session management interface with real-time video conferencing.
 
-First, run the development server:
+## 🚀 Setup Instructions
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+1. **Install Dependencies**:
+   ```bash
+   npm install
+   ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Environment Variables**:
+   Ensure your `.env` file contains:
+   ```env
+   LIVEKIT_URL=wss://your-livekit-url
+   LIVEKIT_API_KEY=your-api-key
+   LIVEKIT_API_SECRET=your-api-secret
+   ```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Run Development Server**:
+   ```bash
+   npm run dev
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎨 Design Decisions
 
-## Learn More
+- **Color Palette**: Adhered strictly to Primary Purple (#A11692) for high-impact actions and Soft White/Grey for healthcare aesthetics.
+- **Components**: Used a "pill-shape" design language (9999px radius) for all buttons and interactive elements.
+- **AI Sidebar**: Implemented a dedicated "Companion" panel for mentors, utilizing subtle gradients and micro-animations for real-time insights.
 
-To learn more about Next.js, take a look at the following resources:
+## ♿ Accessibility (WCAG 2.1 AA)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Keyboard Navigation**: Full tab support with focus trapping in all modals.
+- **Screen Readers**: ARIA labels on all video controls (Mute, Stop Video, End).
+- **Contrast**: Main text meets 4.5:1 ratio; UI components meet 3:1.
+- **Touch Targets**: All interactive elements are minimum 44px for tablet/mobile use.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🛠️ Tech Stack
+- **Next.js 14** (App Router)
+- **LiveKit Client** (Real-time WebRTC)
+- **Zustand** (Global Session Management)
+- **Tailwind CSS v4** (Brand Tokens)
