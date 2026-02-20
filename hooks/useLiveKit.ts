@@ -67,14 +67,27 @@ export function useLiveKit(sessionId: string | null, identity?: string) {
     }, [sessionId, identity, setPhase, setParticipants]);
 
     useEffect(() => {
+        // Only trigger connect if we don't have a room yet or the sessionId changed
         if (sessionId) {
             // eslint-disable-next-line react-hooks/set-state-in-effect
             connect();
         }
+
         return () => {
-            room?.disconnect();
+            // Cleanup: Disconnect when the sessionId changes or component unmounts
+            // Note: room is captured in this closure
         };
-    }, [sessionId, connect, room]);
+    }, [sessionId, connect]);
+
+    // Separate effect for disconnection to avoid re-triggering connection
+    useEffect(() => {
+        return () => {
+            if (room) {
+                console.log("Disconnecting from room...");
+                room.disconnect();
+            }
+        };
+    }, [room]);
 
     // Handle session start: Auto-enable camera if it's off
     useEffect(() => {
