@@ -12,7 +12,7 @@ import { SummaryScreen } from "@/components/session/SummaryScreen";
 function SessionContent() {
   const { phase, setSessionId, sessionId, userRole } = useSessionStore();
   const searchParams = useSearchParams();
-  const { room, remoteParticipants, isConnected, sendSignal } = useLiveKit(
+  const { room, remoteParticipants, sendSignal } = useLiveKit(
     sessionId,
     userRole === "mentor" ? "Mentor" : "Patient"
   );

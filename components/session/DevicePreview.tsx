@@ -13,7 +13,10 @@ export function DevicePreview() {
     const [error, setError] = useState<string | null>(null);
     const [showHelp, setShowHelp] = useState(false);
 
+    // Main effect to manage the MediaStream lifecycle
     useEffect(() => {
+        let currentStream: MediaStream | null = null;
+
         async function setupPreview() {
             if (devices.video) {
                 try {
@@ -27,31 +30,40 @@ export function DevicePreview() {
                         video: true,
                         audio: devices.audio,
                     });
+
+                    currentStream = mediaStream;
                     setStream(mediaStream);
                     setError(null);
-                    if (videoRef.current) {
-                        videoRef.current.srcObject = mediaStream;
-                    }
-                } catch (err: any) {
+                } catch (err: unknown) {
+                    const message = err instanceof Error ? err.message : "Failed to access camera";
                     console.error("Error accessing devices:", err);
-                    setError(err.message || "Failed to access camera");
-                }
-            } else {
-                if (stream) {
-                    stream.getTracks().forEach((track) => track.stop());
+                    setError(message);
                     setStream(null);
                 }
+            } else {
+                setStream(null);
+                setError(null);
             }
         }
 
         setupPreview();
 
         return () => {
-            if (stream) {
-                stream.getTracks().forEach((track) => track.stop());
+            if (currentStream) {
+                currentStream.getTracks().forEach((track) => track.stop());
             }
         };
-    }, [devices.video, devices.audio]);
+    }, [devices.video, devices.audio]); // Removed 'stream' from dependencies to avoid loops
+
+    // Separate effect to handle assigning the stream to the video element
+    useEffect(() => {
+        if (videoRef.current && stream) {
+            videoRef.current.srcObject = stream;
+            videoRef.current.play().catch(err => {
+                console.warn("Autoplay failed or was prevented:", err);
+            });
+        }
+    }, [stream]);
 
     return (
         <div className="relative w-full aspect-video bg-slate-900 rounded-[20px] overflow-hidden group border border-white/5 shadow-2xl">
@@ -61,7 +73,7 @@ export function DevicePreview() {
                     autoPlay
                     muted
                     playsInline
-                    className="w-full h-full object-cover scale-x-[-1]"
+                    className="w-full h-full object-cover scale-x-[-1] bg-slate-900"
                 />
             ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center text-center p-8 bg-slate-800">

@@ -46,7 +46,7 @@ export const api = {
         return { success: true };
     },
 
-    endSession: async (sessionId: string, reason: string): Promise<{ success: boolean }> => {
+    endSession: async (sessionId: string): Promise<{ success: boolean }> => {
         await new Promise((r) => setTimeout(r, MOCK_DELAY));
         const session = getSessionData(sessionId);
         if (session) {

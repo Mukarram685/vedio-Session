@@ -5,8 +5,6 @@ import {
     Room,
     RoomEvent,
     RemoteParticipant,
-    TrackPublication,
-    DataPacket_Kind,
 } from "livekit-client";
 import { useSessionStore } from "@/hooks/useSessionStore";
 
@@ -16,7 +14,7 @@ export function useLiveKit(sessionId: string | null, identity?: string) {
     const [isConnected, setIsConnected] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    const { devices, setPhase, setParticipants } = useSessionStore();
+    const { phase, devices, setPhase, setParticipants, toggleDevice } = useSessionStore();
 
     const connect = useCallback(async () => {
         if (!sessionId) return;
@@ -60,43 +58,61 @@ export function useLiveKit(sessionId: string | null, identity?: string) {
 
             await newRoom.connect(process.env.NEXT_PUBLIC_LIVEKIT_URL || "", token);
 
-            // Auto-publish tracks with safety checks for secure context
-            const canPublish = typeof navigator !== 'undefined' &&
-                navigator.mediaDevices &&
-                typeof navigator.mediaDevices.getUserMedia === 'function';
-
-            if (canPublish) {
-                if (devices.video) await newRoom.localParticipant.setCameraEnabled(true).catch(console.warn);
-                if (devices.audio) await newRoom.localParticipant.setMicrophoneEnabled(true).catch(console.warn);
-            }
-
             setRoom(newRoom);
             setRemoteParticipants(Array.from(newRoom.remoteParticipants.values()));
         } catch (err) {
             console.error("LiveKit connection error:", err);
             setError("Failed to connect to video server.");
         }
-    }, [sessionId, identity, devices.video, devices.audio, setPhase, setParticipants]);
+    }, [sessionId, identity, setPhase, setParticipants]);
 
     useEffect(() => {
         if (sessionId) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             connect();
         }
         return () => {
             room?.disconnect();
         };
-    }, [sessionId, connect]); // We want to reconnect if identity changes (login flow)
+    }, [sessionId, connect, room]);
 
-    // Handle toggles from store
+    // Handle session start: Auto-enable camera if it's off
+    useEffect(() => {
+        if (phase === "active" && !devices.video) {
+            // Check if we have permission/secure context before forcing
+            const canPublish = typeof navigator !== 'undefined' &&
+                navigator.mediaDevices &&
+                typeof navigator.mediaDevices.getUserMedia === 'function';
+
+            if (canPublish) {
+                // If it's disabled in store, toggle it on
+                toggleDevice("video");
+            }
+        }
+    }, [phase, devices.video, toggleDevice]);
+
+    // Handle toggles from store separately (no reconnection)
     useEffect(() => {
         if (room && room.state === 'connected') {
-            room.localParticipant.setCameraEnabled(devices.video).catch(console.warn);
+            const canPublish = typeof navigator !== 'undefined' &&
+                navigator.mediaDevices &&
+                typeof navigator.mediaDevices.getUserMedia === 'function';
+
+            if (canPublish) {
+                room.localParticipant.setCameraEnabled(devices.video).catch(console.warn);
+            }
         }
     }, [room, devices.video]);
 
     useEffect(() => {
         if (room && room.state === 'connected') {
-            room.localParticipant.setMicrophoneEnabled(devices.audio).catch(console.warn);
+            const canPublish = typeof navigator !== 'undefined' &&
+                navigator.mediaDevices &&
+                typeof navigator.mediaDevices.getUserMedia === 'function';
+
+            if (canPublish) {
+                room.localParticipant.setMicrophoneEnabled(devices.audio).catch(console.warn);
+            }
         }
     }, [room, devices.audio]);
 

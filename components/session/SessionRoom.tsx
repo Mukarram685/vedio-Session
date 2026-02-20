@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Sidebar, LayoutPanelLeft, Activity } from "lucide-react";
+import { LayoutPanelLeft, Activity } from "lucide-react";
 import { useSessionStore } from "@/hooks/useSessionStore";
 import { ParticipantView } from "@/components/video/ParticipantView";
 import { Controls } from "@/components/video/Controls";
@@ -19,7 +19,7 @@ interface SessionRoomProps {
 }
 
 export function SessionRoom({ room, remoteParticipants }: SessionRoomProps) {
-    const { sessionId, userRole, setPhase } = useSessionStore();
+    const { userRole, setPhase } = useSessionStore();
     const [isEndModalOpen, setIsEndModalOpen] = useState(false);
     const [showSidebar, setShowSidebar] = useState(userRole === "mentor");
     const [isScreenSharing, setIsScreenSharing] = useState(false);

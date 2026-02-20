@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from "react";
 import { Check, Loader2 } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
-import { useSessionStore } from "@/hooks/useSessionStore";
 
 interface StartModalProps {
     isOpen: boolean;

@@ -15,7 +15,7 @@ interface WaitingRoomProps {
 }
 
 export function WaitingRoom({ room, sendSignal }: WaitingRoomProps) {
-    const { phase, userRole, participantsReady, setParticipants, setPhase, sessionId } = useSessionStore();
+    const { userRole, participantsReady, setPhase, sessionId } = useSessionStore();
     const [isStartModalOpen, setIsStartModalOpen] = useState(false);
     const [dots, setDots] = useState("");
     const [copied, setCopied] = useState(false);

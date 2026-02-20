@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CheckCircle2, Calendar, FileText, ArrowRight, RefreshCw } from "lucide-react";
+import { CheckCircle2, Calendar, FileText, RefreshCw } from "lucide-react";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { useSessionStore } from "@/hooks/useSessionStore";

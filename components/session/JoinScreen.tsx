@@ -47,14 +47,14 @@ export function JoinScreen() {
                             onClick={() => setRole("mentee")}
                             className="flex-1"
                         >
-                            I'm a Patient
+                            I&apos;m a Patient
                         </Button>
                         <Button
                             variant={userRole === "mentor" ? "primary" : "outline"}
                             onClick={() => setRole("mentor")}
                             className="flex-1"
                         >
-                            I'm a Mentor
+                            I&apos;m a Mentor
                         </Button>
                     </div>
                 </div>
